@@ -9,6 +9,7 @@ import './styles/styles.scss';
 import 'react-dates/lib/css/_datepicker.css';
 import { firebase } from './firebase/firebase';
 import LoadingPage from './components/LoadingPage';
+import { setStartJobs } from './actions/jobs';
 
 const store = configureStore();
 const jsx = (
@@ -26,16 +27,23 @@ const renderApp = () => {
 
 ReactDOM.render(<LoadingPage />, document.getElementById('app'));
 
-firebase.auth().onAuthStateChanged((user) => {
+
+firebase.auth().onAuthStateChanged((user)=>{
   if (user) {
-    store.dispatch(login(user.uid));
+  store.dispatch(login(user.uid));
+  store.dispatch(setStartJobs())
+  .then(()=>{
     renderApp();
-    if (history.location.pathname === '/') {
-      history.push('/dashboard');
+    if(history.location.pathname === '/'){                                                  
+      history.push('/dashboard');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+    }                       
+  }).catch((e)=>{
+   console.log('error',e);
+  })
+  }else{
+      store.dispatch(logout());
+      renderApp();
+      history.push('/');
+  
     }
-  } else {
-    store.dispatch(logout());
-    renderApp();
-    history.push('/');
-  }
-});
+  });                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
