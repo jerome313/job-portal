@@ -41,12 +41,14 @@ class JobApplication extends React.Component{
             this.setState(()=>({error:''}));
             const application = {
                 name:this.state.name,
-                age:parseFloat(this.state.age ,10) * 100,
-                experience:parseFloat(this.state.experience ,10) * 100,
+                age:this.state.age,
+                experience:this.state.experience,
                 education:this.state.education,
                 id:this.state.id
             };
             this.props.dispatch(startAddApplication(application));
+            this.props.history.push('/');
+
         }
     } 
     render(){ 

@@ -1,35 +1,51 @@
 import React from 'react';
-import ApplicationsList from './ApplicationsListBox';
 import database from '../firebase/firebase';
+import ApplicationsList from './ApplicationsList';
 
-const JobDashboard = (props) => {
-  const jobId = props.match.params.id;
-  console.log(jobId);
-   const getApplications = () =>{
-    return database.ref(`users/jobs/${jobId}/applications`).once('value').then((snapshot)=>{
-      const applications = [];
+
+
+
+  class JobDashboard extends React.Component{
+    constructor(props){
+      super(props);
+    }
+    state={
+      jobId:this.props.match.params.id,
+      app:[]
+    }
+
+ 
+    getApplications = () =>{
+    return database.ref(`users/jobs/${this.state.jobId}/applications`).once('value').then((snapshot)=>{
+      const app = [];
             snapshot.forEach((childSnapshot)=>{
-               applications.push({
+               app.push({
                  id:childSnapshot.key,
                  ...childSnapshot.val()
                });    
             });
-            return applications;
-          console.log(snapshot.val());
+            //console.log('fetch success',applications);
+            this.setState(()=>({app}))
     });
-   }
+
+    
    
-   const applications = getApplications();
-   console.log('applications',applications);
-    return(
+     
+   
+     };
+    render(){
+      console.log(this.state.app); 
+      this.getApplications();
+   return(
       <div>
       <div className="page-header">
       <div className="content-container">
          <h1 className="page-header__title">Applications</h1>
-         <ApplicationsList/>
+         <ApplicationsList applications={this.state.app}/>
        </div>
    </div>
       </div>
     );
   }
+}
     export default JobDashboard;
