@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { firebase }from '../firebase/firebase';
+import FileUploader from 'react-firebase-file-uploader';
 import { startAddApplication } from '../actions/applications';
 class JobApplication extends React.Component{
     constructor(props){
@@ -10,6 +12,10 @@ class JobApplication extends React.Component{
         education:'',
         experience:'',
         id:this.props.match.params.id,
+        resume: '',
+        isUploading: false,
+        progress: 0,
+        resumeURL: '',
         error:''
     };
     }   
@@ -33,10 +39,18 @@ class JobApplication extends React.Component{
       this.setState(()=>({experience}))
       }
   }
+
+ handleUploadSuccess = (filename) => {
+    this.setState({resume: filename, progress: 100, isUploading: false});
+    firebase.storage().ref('resume').child(filename).getDownloadURL()
+    .then((url) => this.setState({resumeURL: url}));
+    console.log(this.state.resumeURL);
+    };
+
     onSubmit = (e) =>{
         e.preventDefault();
         if(!this.state.name || !this.state.age || !this.state.experience || !this.state.education){
-        this.setState(()=>({error:'all fields are required'}));
+        this.setState(()=>({error:'name age experience education fields are required'}));
         }else{
             this.setState(()=>({error:''}));
             const application = {
@@ -44,7 +58,8 @@ class JobApplication extends React.Component{
                 age:this.state.age,
                 experience:this.state.experience,
                 education:this.state.education,
-                id:this.state.id
+                id:this.state.id,
+                resumeURL:this.state.resumeURL          
             };
             this.props.dispatch(startAddApplication(application));
             this.props.history.push('/');
@@ -88,6 +103,23 @@ class JobApplication extends React.Component{
              placeholder="experience"
              value={this.state.experience}
              onChange={this.onExperienceChange}
+             />
+             <label>Resume:</label>
+             {this.state.isUploading &&
+            <p>Progress: {this.state.progress}</p>  
+             }
+             {this.state.avatarURL &&
+             <img src={this.state.avatarURL} />
+             }
+             <FileUploader
+             accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf"
+             name="resume"
+             randomizeFilename
+             storageRef={firebase.storage().ref('resume')}
+             onUploadStart={this.handleUploadStart}
+             onUploadError={this.handleUploadError}
+             onUploadSuccess={this.handleUploadSuccess}
+             onProgress={this.handleProgress}
              />
              <div>
              <button className="button">Submit Job Application</button>

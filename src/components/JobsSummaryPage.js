@@ -9,7 +9,7 @@ const jobWord = jobCount > 1 ? 'jobs' : 'job';
 return(
   <div className="page-header">
      <div className="content-container">
-    <h1 className="page-header__title">Veiwing <span>{jobCount}</span> {jobWord}</h1>
+    <h1 className="page-header__title">Viewing <span>{jobCount}</span> {jobWord}</h1>
     <div className="page-header__actions">
     <Link className="button" to="/create">Add Job</Link>
     </div>

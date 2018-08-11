@@ -14,10 +14,11 @@ export const startAddApplication = (applicationData = {}) =>{
         education='',
         experience=0,
         age=0,
+        resumeURL='',
         id
         } = applicationData;
 
-        const application = {duid, name, education,  experience, age};
+        const application = {duid, name, education,  experience, age, resumeURL};
         //const id = {id}; 
         console.log(id);
         return database.ref(`users/jobs/${id}/applications/`).push(application).then((ref)=>{ 

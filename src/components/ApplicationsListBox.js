@@ -1,7 +1,7 @@
 import React from 'react';
  
 
- const ApplicationListBox = ({name, age, education, experience}) =>{
+ const ApplicationListBox = ({name, age, education, experience, resumeURL}) =>{
  
     return(
     <div>
@@ -22,7 +22,14 @@ import React from 'react';
      <div>Experience</div>
      <div>{experience}</div>
     </div>
+  {  resumeURL &&
+    <div className="list-header">   
+    <div>Resume</div>
+    <a className="button button--secondary" href={resumeURL}>download</a>
     </div>
+  }
+  
+  </div>
     <br/>
     </div>
  ); 
